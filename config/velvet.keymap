@@ -61,6 +61,15 @@
             cw-binding = <&kp C_VOL_UP>;
             ccw-binding = <&kp C_VOL_DN>;
         };
+
+        lt_bt: layer_tap_bt {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <500>;
+            quick-tap-ms = <150>;
+            bindings = <&mo>, <&kp>;
+        };
     };
 
     conditional_layers {
@@ -80,7 +89,7 @@
             bindings = <
 &lt 2 TAB      &kp Q                 &kp W               &kp E               &kp R                 &kp T                   &mkp RCLK  &kp Y        &kp U                      &kp I                &kp O                &kp P                          &kp GRAVE
 &mt LCTRL ESC  &lh_pht LEFT_SHIFT A  &lh_pht LEFT_GUI S  &lh_pht LEFT_ALT D  &lh_pht LCTRL F       &kp G                   &mkp MCLK  &kp H        &rh_pht RCTRL J            &rh_pht RIGHT_ALT K  &rh_pht RIGHT_GUI L  &rh_pht RIGHT_SHIFT SEMICOLON  &kp SQT
-&kp LSHFT      &kp Z                 &kp X               &lt 4 C             &kp V                 &kp B                   &mkp LCLK  &kp N        &kp M                      &lt 4 COMMA          &kp DOT              &kp FSLH                       &kp BSLH
+&kp LSHFT      &kp Z                 &kp X               &lt 4 C             &kp V                 &lt_bt 3 B              &mkp LCLK  &kp N        &kp M                      &lt 4 COMMA          &kp DOT              &kp FSLH                       &kp BSLH
                &kp LBKT              &kp RBKT            &kp LEFT_ALT        &mt LEFT_SHIFT SPACE  &mt LEFT_GUI ENTER                 &lt 2 SPACE  &mt RIGHT_SHIFT BACKSPACE  &lt 1 LS(LC(C))      &kp MINUS            &kp EQUAL
             >;
 
