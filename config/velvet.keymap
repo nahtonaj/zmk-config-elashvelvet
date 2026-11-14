@@ -1,8 +1,10 @@
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 60
+
 #define BASE 0
-#define LOWER 1
-#define MOUSE_KEYS 2
-#define MOUSE_TP 3
-#define MOUSE_TP_SET 4
+#define FUN 1
+#define NAV 2
+#define MED 3
+#define SCROLL 4
 
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <input/processors.dtsi>
@@ -10,50 +12,46 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
-#include <dt-bindings/zmk/rgb.h>
 
-&mmv_input_listener { input-processors = <&zip_xy_scaler 2 1>; };
+&lt { quick-tap-ms = <150>; };
 
-&msc_input_listener { input-processors = <&zip_scroll_scaler 2 1>; };
-
-&msc {
-    acceleration-exponent = <1>;      // 0
-    time-to-max-speed-ms = <100>;       // 300
-    delay-ms = <0>;                   // 0
-};
-
-&mmv {
-    time-to-max-speed-ms = <500>;
-    acceleration-exponent = <1>;
-    trigger-period-ms = <16>;
-};
+&mt { quick-tap-ms = <150>; };
 
 / {
-    scroll_encoder: scroll_encoder {
-        compatible = "zmk,behavior-sensor-rotate";
-        #sensor-binding-cells = <0>;
-        bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
-
-        tap-ms = <100>;
-    };
-
     behaviors {
-        td0: td0 {
-            compatible = "zmk,behavior-tap-dance";
-            display-name = "Shift/Caps Lock Tap Dance";
-            #binding-cells = <0>;
-            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
+        lh_pht: left_positional_hold_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <400>;
+            quick-tap-ms = <200>;
+            bindings = <&kp>, <&kp>;
+
+            hold-trigger-key-positions = <7 8 9 10 11 12 20 21 22 23 24 25 33 34 35 36 37 38 44 45 46 47 48>;
+            hold-trigger-on-release;
+            require-prior-idle-ms = <150>;
         };
 
-        ltq: ltq {
+        rh_pht: right_positional_hold_tap {
             compatible = "zmk,behavior-hold-tap";
-            label = "LTQ";
-            bindings = <&mo>, <&kp>;
-
             #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            quick-tap-ms = <180>;
+            flavor = "balanced";
+            tapping-term-ms = <400>;
+            quick-tap-ms = <200>;
+            bindings = <&kp>, <&kp>;
+
+            hold-trigger-key-positions = <0 1 2 3 4 5 6 13 14 15 16 17 18 19 26 27 28 29 30 31 32 39 40 41 42 43>;
+            hold-trigger-on-release;
+            require-prior-idle-ms = <150>;
+        };
+
+        enc_mscroll: encoder_mouse_scroll {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            tap-ms = <50>;
+            bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
         };
 
         rsr_vol: rsr_vol {
@@ -65,12 +63,12 @@
         };
     };
 
-    combos {
-        compatible = "zmk,combos";
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
 
-        flash {
-            bindings = <&bootloader>;
-            key-positions = <0 11>;
+        media_layer {
+            if-layers = <FUN NAV>;
+            then-layer = <MED>;
         };
     };
 
@@ -78,73 +76,55 @@
         compatible = "zmk,keymap";
 
         BASE {
-            bindings = <
-&kp ESC         &kp Q      &kp W         &kp E  &kp R  &kp T      &mkp RCLK  &kp Y      &kp U  &kp I      &kp O      &kp P      &kp BSPC
-&kp TAB         &kp A      &kp S         &kp D  &kp F  &kp G      &mkp MCLK  &kp H      &kp J  &kp K      &kp L      &kp SEMI   &kp SQT
-&kp LEFT_SHIFT  &kp Z      &kp X         &kp C  &kp V  &kp B      &mkp LCLK  &kp N      &kp M  &kp COMMA  &kp DOT    &kp SLASH  &kp ENTER
-                &kp LCTRL  &kp CAPSLOCK  &mo 3  &mo 1  &kp SPACE             &kp SPACE  &mo 2  &kp BSLH   &kp MINUS  &kp EQUAL
-            >;
-
             label = "BASE";
-            sensor-bindings = <&rsr_vol &rsr_trans>;
-        };
-
-        layer_1 {
             bindings = <
-&kp GRAVE  &kp N1                &kp N2               &kp N3           &kp N4  &kp N5  &trans  &kp N6            &kp N7             &kp N8          &kp N9           &kp N0      &kp DELETE
-&trans     &kp C_PLAY_PAUSE      &kp C_VOL_DN         &kp C_VOLUME_UP  &trans  &trans  &trans  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE  &kp RIGHT_BRACE  &trans      &kp F12
-&trans     &kp C_AL_MY_COMPUTER  &kp C_AL_CALCULATOR  &trans           &trans  &trans  &trans  &kp PAGE_UP       &kp PAGE_DOWN      &kp HOME        &kp END          &kp INSERT  &trans
-           &trans                &trans               &trans           &trans  &trans          &trans            &trans             &trans          &trans           &trans
+&lt 2 TAB      &kp Q                 &kp W               &kp E               &kp R                 &kp T                   &mkp RCLK  &kp Y        &kp U                      &kp I                &kp O                &kp P                          &kp GRAVE
+&mt LCTRL ESC  &lh_pht LEFT_SHIFT A  &lh_pht LEFT_GUI S  &lh_pht LEFT_ALT D  &lh_pht LCTRL F       &kp G                   &mkp MCLK  &kp H        &rh_pht RCTRL J            &rh_pht RIGHT_ALT K  &rh_pht RIGHT_GUI L  &rh_pht RIGHT_SHIFT SEMICOLON  &kp SQT
+&kp LSHFT      &kp Z                 &kp X               &lt 4 C             &kp V                 &kp B                   &mkp LCLK  &kp N        &kp M                      &lt 4 COMMA          &kp DOT              &kp FSLH                       &kp BSLH
+               &kp LBKT              &kp RBKT            &kp LEFT_ALT        &mt LEFT_SHIFT SPACE  &mt LEFT_GUI ENTER                 &lt 2 SPACE  &mt RIGHT_SHIFT BACKSPACE  &lt 1 LS(LC(C))      &kp MINUS            &kp EQUAL
             >;
 
-            sensor-bindings = <&rsr_vol &rsr_trans>;
+            sensor-bindings = <&enc_mscroll>;
         };
 
-        layer_2 {
+        FUN {
+            label = "FUN";
             bindings = <
-&kp TILDE  &kp EXCL  &kp AT  &kp HASH  &kp DLLR  &kp PRCNT  &trans  &kp CARET        &kp AMPS         &kp ASTRK     &kp LPAR      &kp RPAR      &trans
-&trans     &trans    &trans  &trans    &trans    &trans     &trans  &trans           &trans           &trans        &trans        &trans        &trans
-&trans     &trans    &trans  &trans    &trans    &trans     &trans  &rgb_ug RGB_OFF  &rgb_ug RGB_OFF  &trans        &trans        &trans        &trans
-           &trans    &trans  &trans    &trans    &trans             &trans           &bt BT_SEL 0     &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3
+&kp F12  &kp F1     &kp F2    &kp F3    &kp F4    &kp F5     &trans  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &kp F11
+&trans   &kp EXCL   &kp AT    &kp HASH  &kp DLLR  &kp PRCNT  &trans  &trans  &kp N4  &kp N5  &kp N6  &trans   &trans
+&trans   &kp CARET  &kp AMPS  &kp STAR  &kp LPAR  &kp RPAR   &trans  &trans  &kp N1  &kp N2  &kp N3  &trans   &trans
+         &trans     &trans    &trans    &trans    &trans             &trans  &trans  &trans  &kp N0  &kp DOT
             >;
 
-            sensor-bindings = <&rsr_vol &rsr_trans>;
+            sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
-        layer_3 {
+        NAV {
+            label = "NAV";
             bindings = <
-&kp F1  &kp F2    &kp UP_ARROW  &kp F3     &kp F4  &kp F5  &trans  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &kp F11
-&trans  &kp LEFT  &kp DOWN      &kp RIGHT  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans   &kp F12
-&trans  &trans    &trans        &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans   &trans
-        &trans    &trans        &trans     &trans  &trans          &trans  &trans  &trans  &trans  &trans
+&trans  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5         &trans  &kp N6    &kp N7         &kp N8     &kp N9     &kp N0      &trans
+&trans  &trans  &trans  &trans  &trans  &trans         &trans  &kp LEFT  &kp DOWN       &kp UP     &kp RIGHT  &kp DELETE  &trans
+&trans  &trans  &trans  &trans  &trans  &trans         &trans  &kp HOME  &kp PAGE_DOWN  &kp PG_UP  &kp END    &trans      &trans
+        &trans  &trans  &trans  &trans  &kp LG(ENTER)          &trans    &kp DELETE     &trans     &mkp MB4   &mkp MB5
             >;
 
-            sensor-bindings = <&rsr_vol &rsr_trans>;
+            sensor-bindings = <&inc_dec_kp DOWN UP>;
         };
 
-        layer_4 {
+        MED {
+            label = "MED";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-        &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
+&bt BT_CLR    &bt BT_SEL 0    &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &trans  &trans            &trans        &trans        &trans                &trans                &trans
+&out OUT_TOG  &studio_unlock  &trans        &trans        &trans        &trans        &trans  &kp C_PREV        &kp C_VOL_DN  &kp C_VOL_UP  &kp C_NEXT            &trans                &trans
+&bootloader   &trans          &trans        &trans        &trans        &trans        &trans  &trans            &trans        &trans        &trans                &trans                &bootloader
+              &trans          &trans        &trans        &trans        &trans                &kp C_PLAY_PAUSE  &trans        &trans        &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC
             >;
 
-            sensor-bindings = <&rsr_vol &rsr_trans>;
+            sensor-bindings = <&inc_dec_kp C_BRIGHTNESS_DEC C_BRIGHTNESS_INC>;
         };
 
-        layer_5 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-        &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
-            >;
-
-            sensor-bindings = <&rsr_vol &rsr_trans>;
-        };
-
-        layer_6 {
+        SCROLL {
+            label = "SCROLL";
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
@@ -152,18 +132,7 @@
         &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
             >;
 
-            sensor-bindings = <&rsr_vol &rsr_trans>;
-        };
-
-        layer_7 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-        &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
-            >;
-
-            sensor-bindings = <&rsr_vol &rsr_trans>;
+            sensor-bindings = <&enc_mscroll>;
         };
     };
 };
