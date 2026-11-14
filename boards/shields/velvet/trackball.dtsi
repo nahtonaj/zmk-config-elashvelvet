@@ -48,7 +48,7 @@
 };
 
 &scroll_runtime_input_processor {
-    scale-divisor = <32>;
+    scale-divisor = <20>;
 };
 
 / {
