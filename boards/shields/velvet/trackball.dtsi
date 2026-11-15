@@ -61,13 +61,13 @@
         scroller {
             layers = <5>;
             input-processors =
-                <&zip_xy_to_scroll_mapper &zip_scroll_transform INPUT_TRANSFORM_X_INVERT &scroll_runtime_input_processor>;
+                <&zip_xy_to_scroll_mapper &scroll_runtime_input_processor>;
         };
 
         scroller_mac {
             layers = <6>;
             input-processors =
-                <&zip_xy_to_scroll_mapper &zip_scroll_transform INPUT_TRANSFORM_X_INVERT &scroll_runtime_input_processor &zip_scroll_scaler 1 16>;
+                <&zip_xy_to_scroll_mapper &scroll_runtime_input_processor &zip_scroll_scaler 1 16>;
         };
     };
 };
