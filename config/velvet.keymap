@@ -94,6 +94,14 @@
             tapping-term-ms = <200>;
             bindings = <&mo>, <&kp>;
         };
+
+        lt_mkp: layer_tap_mouse_key_press {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            bindings = <&mo>, <&mkp>;
+        };
     };
 
     keymap {
@@ -102,10 +110,10 @@
         BASE {
             label = "BASE";
             bindings = <
-&lt NAV TAB    &kp Q                 &kp W               &kp E               &kp R                 &kp T                   &mkp RCLK  &kp Y          &kp U                      &kp I                &kp O                &kp P                          &kp GRAVE
-&mt LCTRL ESC  &lh_pht LEFT_SHIFT A  &lh_pht LEFT_GUI S  &lh_pht LEFT_ALT D  &lh_pht LCTRL F       &kp G                   &mkp MCLK  &kp H          &rh_pht RCTRL J            &rh_pht RIGHT_ALT K  &rh_pht RIGHT_GUI L  &rh_pht RIGHT_SHIFT SEMICOLON  &kp SQT
-&kp LSHFT      &kp Z                 &kp X               &lt SCROLL C        &kp V                 &lt_bt MED B            &mkp LCLK  &kp N          &kp M                      &kp COMMA            &kp DOT              &kp FSLH                       &kp BSLH
-               &kp LBKT              &kp RBKT            &mo FUN             &mt LEFT_SHIFT SPACE  &mt LEFT_GUI ENTER                 &lt NAV SPACE  &mt RIGHT_SHIFT BACKSPACE  &lt_med MED LS(LC(C))  &kp MINUS          &kp EQUAL
+&lt NAV TAB    &kp Q                 &kp W               &kp E               &kp R                 &kp T                   &mkp LCLK            &kp Y          &kp U                      &kp I                &kp O                &kp P                          &kp GRAVE
+&mt LCTRL ESC  &lh_pht LEFT_SHIFT A  &lh_pht LEFT_GUI S  &lh_pht LEFT_ALT D  &lh_pht LCTRL F       &kp G                   &lt_mkp SCROLL MCLK  &kp H          &rh_pht RCTRL J            &rh_pht RIGHT_ALT K  &rh_pht RIGHT_GUI L  &rh_pht RIGHT_SHIFT SEMICOLON  &kp SQT
+&kp LSHFT      &kp Z                 &kp X               &kp C               &kp V                 &lt_bt MED B            &mkp RCLK            &kp N          &kp M                      &kp COMMA            &kp DOT              &kp FSLH                       &kp BSLH
+               &kp LBKT              &kp RBKT            &mo FUN             &mt LEFT_SHIFT SPACE  &mt LEFT_GUI ENTER                           &lt NAV SPACE  &mt RIGHT_SHIFT BACKSPACE  &lt_med MED LS(LC(C))  &kp MINUS          &kp EQUAL
             >;
 
             sensor-bindings = <&enc_mscroll>;
@@ -114,10 +122,10 @@
         BASE_MAC {
             label = "BASE_MAC";
             bindings = <
-&trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &lt SCROLL_MAC C  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-        &trans  &trans  &trans            &trans  &trans          &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans                   &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &lt_mkp SCROLL_MAC MCLK  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans                   &trans  &trans  &trans  &trans  &trans  &trans
+        &trans  &trans  &trans  &trans  &trans                           &trans  &trans  &trans  &trans  &trans
             >;
 
             sensor-bindings = <&enc_mscroll_mac>;
