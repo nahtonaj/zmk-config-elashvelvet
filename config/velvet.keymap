@@ -156,7 +156,7 @@
               &trans          &trans        &trans        &trans        &trans                &kp C_PLAY_PAUSE  &trans        &trans        &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC
             >;
 
-            sensor-bindings = <&inc_dec_kp C_BRIGHTNESS_DEC C_BRIGHTNESS_INC>;
+            sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
         SCROLL {
